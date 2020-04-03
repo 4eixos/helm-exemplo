@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: votacion
+  labels:
+    {{- include "colacao.labels" . | nindent 4 }}
+    app: colacao-app
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.deploy.votacion.port }}
+      targetPort: {{ .Values.deploy.votacion.port }}
+      protocol: TCP
+      name: votacion
+    - port: {{ .Values.deploy.votacion.portPriv }}
+      targetPort: {{ .Values.deploy.votacion.portPriv }}
+      protocol: TCP
+      name: votacionpriv
+  selector:
+    name: {{ include "colacao.fullname" . }}-votacion

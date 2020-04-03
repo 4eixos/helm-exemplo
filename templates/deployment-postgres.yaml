@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "colacao.fullname" . }}-postgres
+  labels:
+    {{- include "colacao.labels" . | nindent 4 }}
+    app: colacao-app
+spec:
+  replicas: {{ .Values.deploy.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "colacao.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "colacao.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "colacao.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-postgres
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.deploy.postgres.image }}:{{ .Values.deploy.postgres.imageTag }}"
+          imagePullPolicy: {{ .Values.deploy.postgres.pullPolicy }}
+          ports:
+            - name: db
+              containerPort: {{ .Values.deploy.postgres.port }}
+              protocol: TCP
+          env: 
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+

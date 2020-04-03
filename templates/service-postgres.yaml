@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    {{- include "colacao.labels" . | nindent 4 }}
+    app: colacao-app
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.deploy.postgres.port }}
+      targetPort: {{ .Values.deploy.postgres.port }}
+      protocol: TCP
+      name: postgres
+  selector:
+    {{- include "colacao.selectorLabels" . | nindent 4 }}

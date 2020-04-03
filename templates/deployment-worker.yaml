@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "colacao.fullname" . }}-worker
+  labels:
+    {{- include "colacao.labels" . | nindent 4 }}
+    app: colacao-app
+spec:
+  replicas: {{ .Values.deploy.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "colacao.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "colacao.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "colacao.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.deploy.worker.image }}:{{ .Values.deploy.worker.imageTag }}"
+          imagePullPolicy: {{ .Values.deploy.worker.pullPolicy }}
+#          ports:
+#            - name: worker
+#              containerPort: {{ .Values.deploy.worker.port }}
+#              protocol: TCP
+
