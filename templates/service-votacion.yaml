@@ -17,4 +17,6 @@ spec:
       protocol: TCP
       name: votacionpriv
   selector:
-    name: {{ include "colacao.fullname" . }}-votacion
+    {{- include "colacao.selectorLabels" . | nindent 4 }}
+    app: colacao-app
+    concern: app-votacion

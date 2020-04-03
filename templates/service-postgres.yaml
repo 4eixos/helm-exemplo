@@ -14,3 +14,5 @@ spec:
       name: postgres
   selector:
     {{- include "colacao.selectorLabels" . | nindent 4 }}
+    app: colacao-app
+    concern: bbdd-postgres
