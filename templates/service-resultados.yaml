@@ -13,4 +13,6 @@ spec:
       protocol: TCP
       name: resultados
   selector:
-    name: {{ include "colacao.fullname" . }}-resultados
+    {{- include "colacao.selectorLabels" . | nindent 4 }}
+    app: colacao-app
+    concern: app-resultados

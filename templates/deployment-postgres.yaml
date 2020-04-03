@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "colacao.labels" . | nindent 4 }}
     app: colacao-app
+    concern: bbdd-postgres
 spec:
   replicas: {{ .Values.deploy.postgres.replicaCount }}
   selector:
@@ -14,6 +15,8 @@ spec:
     metadata:
       labels:
         {{- include "colacao.selectorLabels" . | nindent 8 }}
+        app: colacao-app
+        concern: bbdd-postgres
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
