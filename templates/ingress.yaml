@@ -15,7 +15,6 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  
 spec:
 {{- if .Values.ingress.tls }}
   tls:
@@ -29,15 +28,18 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: votacion.raulgomez.eu
       http:
         paths:
         {{- range .paths }}
-          - path: /votacion
+          - path: 
             backend:
               serviceName: votacion
               servicePort: 80
-          - path: /resultados
+    - host: resultados.raulgomez.eu
+      http:
+        paths:
+          - path: 
             backend:
               serviceName: resultados
               servicePort: 80
